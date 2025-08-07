@@ -26,3 +26,10 @@ export interface Participant {
   name: string;
   role: number;
 }
+
+export interface UploadedFile {
+  id: number;
+  file: File;
+  url: string;
+  type: string;
+}
