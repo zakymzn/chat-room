@@ -1,1 +1,18 @@
 @import "tailwindcss";
+
+@theme {
+  --color-celadon-blue: #1878a8;
+  --color-dollar-bill: #89c566;
+  --color-keppel: #43b397;
+  --color-iguana-green: #63bb7f;
+  --color-error: #ff5449;
+  --color-neutral: #909193;
+}
+
+::root {
+  font-family: "Noto Sans", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+  font-variation-settings: "width" 100;
+}

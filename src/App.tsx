@@ -1,16 +1,18 @@
-import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
+import { Route, Routes } from "react-router-dom";
 import "./App.css";
+import HomePage from "./pages/HomePage";
+import GroupChatPage from "./pages/GroupChatPage";
+import GroupDetailPage from "./pages/GroupDetailPage";
 
 function App() {
-  const [count, setCount] = useState(0);
-
   return (
-    <div>
-      <nav></nav>
-    </div>
-  );
+    <Routes>
+      <Route path="/" element={<HomePage />} />
+      <Route path="/group/:id" element={<GroupChatPage />} />
+      <Route path="/group/:id/detail" element={<GroupDetailPage />} />
+      <Route path="/contact/:id" element={<div>Contact Page</div>} />
+    </Routes>
+  )
 }
 
 export default App;
