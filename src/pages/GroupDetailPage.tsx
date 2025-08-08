@@ -9,7 +9,20 @@ function GroupDetailPage() {
 
   useEffect(() => {
     const handleFetchData = () => {
-      setResponse(data);
+      const clonedData = JSON.parse(JSON.stringify(data));
+      clonedData.results.forEach((result: any) => {
+        result.comments.forEach((comment: any) => {
+          comment.file = comment.file.map((f: any) => {
+            if (f.file && !(f.file instanceof File)) {
+              const fileObj = f.file;
+              const file = new File([""], fileObj.name, { type: fileObj.type });
+              return { ...f, file };
+            }
+            return f;
+          });
+        });
+      });
+      setResponse(clonedData);
     };
 
     handleFetchData();
