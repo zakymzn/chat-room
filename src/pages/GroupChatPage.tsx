@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import type { Datas, UploadedFile } from "../data/interfaces";
-import data from "../data/dummy_response.json";
+import data from "../data/dummy_response_extended.json";
 import { NavLink } from "react-router-dom";
 import RenderFile from "../components/RenderFile";
 import { customAlphabet } from "nanoid";
@@ -99,7 +99,7 @@ function GroupChatPage() {
       <ul className="flex flex-col p-4 space-y-2 h-[calc(100vh-10rem)] overflow-y-auto">
         {
           response?.results[0].comments.map((message) => (
-            <li key={message.id} className={`${message.sender === userId ? 'bg-iguana-green text-black place-self-end' : 'bg-neutral text-black place-self-start'} max-w-2/3 rounded-lg p-2`}>
+            <li key={message.id} className={`${message.sender === userId ? 'bg-iguana-green text-black place-self-end' : 'bg-neutral text-black place-self-start'} max-w-4/5 rounded-lg p-2`}>
               {
                 message.sender !== userId && (
                   <p className="font-bold text-sm">{message.sender}</p>

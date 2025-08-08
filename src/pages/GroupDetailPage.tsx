@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
 import type { Datas } from "../data/interfaces";
-import data from "../data/dummy_response.json";
+import data from "../data/dummy_response_extended.json";
 
 function GroupDetailPage() {
   const [response, setResponse] = useState<Datas>();

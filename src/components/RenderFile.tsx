@@ -8,7 +8,7 @@ function RenderFile(file: UploadedFile) {
       <source src={file.url} type={file.type} />
     </video>;
   } else if (file.type === 'application/pdf') {
-    return <embed src={file.url} type="application/pdf" title="PDF Preview" className="h-64 w-full my-2" />;
+    return <embed src={file.url} type="application/pdf" title="PDF Preview" className="h-96 w-full my-2" />;
   } else {
     return <p>Unsupported file type</p>;
   }
