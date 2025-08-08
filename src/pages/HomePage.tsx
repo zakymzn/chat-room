@@ -45,7 +45,7 @@ function HomePage() {
       {/* Chat List */}
       <div className="lg:w-1/3 w-full h-screen">
         <nav className="flex items-center justify-between bg-white p-4 top-0 sticky">
-          <div className="">
+          <div>
             <p className="text-2xl text-celadon-blue font-bold">Chat Room</p>
           </div>
           <div className="space-x-8">
