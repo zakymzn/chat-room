@@ -4,6 +4,7 @@ import data from "../data/dummy_response.json";
 import { NavLink } from "react-router-dom";
 import vector from "../assets/select_chat.svg";
 import { customAlphabet } from "nanoid";
+import RenderFile from "../components/RenderFile";
 
 function HomePage() {
   const [response, setResponse] = useState<Datas>();
@@ -12,9 +13,7 @@ function HomePage() {
   const [selectedRoom, setSelectedRoom] = useState<number>(0);
   const [showGroupDetail, setShowGroupDetail] = useState(false);
   const [selectedFile, setSelectedFile] = useState<UploadedFile | null>(null);
-  // const [preview, setPreview] = useState<string | null>(null);
-  const [sentFile, setSentFile] = useState<UploadedFile | null>(null);
-  const roomId = window.location.pathname.split('/').pop();
+  const [sentFile, setSentFile] = useState<UploadedFile[]>([]);
   const nanoid = customAlphabet('1234567890', 8);
 
   const handleSendMessage = (e: React.FormEvent) => {
@@ -22,42 +21,28 @@ function HomePage() {
     if (message) {
       data.results[0].comments.push({
         id: Number(nanoid()),
-        type: "text",
+        type: selectedFile ? "attachment" : "text",
         message: message,
-        sender: userId
+        sender: userId,
+        file: selectedFile ? [selectedFile] : []
       })
       setResponse(data);
+      if (selectedFile) {
+        setSentFile([...sentFile, selectedFile]);
+      }
       setMessage("");
+      setSelectedFile(null);
     }
   }
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    e.preventDefault();
     const file = e.target.files?.[0]
     if (file) {
       const id = Number(nanoid());
       const url = URL.createObjectURL(file);
       const type = file.type;
       setSelectedFile({ id, file, url, type });
-    }
-  }
-
-  const handleSendFile = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (selectedFile) {
-      data.results[0].comments.push(selectedFile)
-      setSelectedFile(null);
-    }
-  }
-
-  const renderFile = (file: UploadedFile) => {
-    if (file.type.startsWith('image/')) {
-      return <img src={file.url} alt="Preview" className="max-h-40 object-cover" />;
-    } else if (file.type.startsWith('video/')) {
-      return <video src={file.url} controls className="max-h-40 object-cover" />;
-    } else if (file.type === 'application/pdf') {
-      return <iframe src={file.url} title="PDF Preview" className="max-h-40 w-full" />;
-    } else {
-      return <p>Unsupported file type</p>;
     }
   }
 
@@ -186,6 +171,15 @@ function HomePage() {
                           <p className="font-bold text-sm">{message.sender}</p>
                         )
                       }
+                      {
+                        message.file.length > 0 && sentFile && (
+                          <div>
+                            {
+                              message.file.map((f, index) => (<RenderFile key={index} file={f.file} id={f.id} url={f.url} type={f.type} />))
+                            }
+                          </div>
+                        )
+                      }
                       <p>{message.message}</p>
                     </li>
                   ))
@@ -196,19 +190,16 @@ function HomePage() {
                 {
                   selectedFile && (
                     <div className="bg-gray-200 p-4 w-fit rounded-2xl bottom-20 fixed flex justify-center mb-2">
-                      <img src={selectedFile} alt="Preview" className="max-h-40 object-cover" />
+                      <RenderFile file={selectedFile.file} id={selectedFile.id} url={selectedFile.url} type={selectedFile.type} />
                     </div>
                   )
                 }
                 <form onSubmit={handleSendMessage} className="w-full flex justify-between items-end space-x-2">
                   <div className="h-auto w-full min-h-12 pl-4 py-2 bg-gray-200 flex items-end rounded-4xl">
-
                     <textarea name="message" id="message" placeholder="Type message" value={message} onChange={(e) => setMessage(e.target.value)} className="w-full focus:outline-none field-sizing-content min-h-8 max-h-40"></textarea>
-
                     <input id="file" type="file" accept="image/*, video/*, .pdf" onChange={handleFileChange} hidden />
                     <label htmlFor="file" className="mx-4 hover:cursor-pointer">
                       <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#000000"><path d="M720-330q0 104-73 177T470-80q-104 0-177-73t-73-177v-370q0-75 52.5-127.5T400-880q75 0 127.5 52.5T580-700v350q0 46-32 78t-78 32q-46 0-78-32t-32-78v-370h80v370q0 13 8.5 21.5T470-320q13 0 21.5-8.5T500-350v-350q-1-42-29.5-71T400-800q-42 0-71 29t-29 71v370q-1 71 49 120.5T470-160q70 0 119-49.5T640-330v-390h80v390Z" /></svg>
-
                     </label>
                   </div>
                   <button className="bg-dollar-bill px-3 w-12 h-12 flex items-center justify-center rounded-full hover:bg-celadon-blue hover:cursor-pointer transition-all duration-200">
@@ -232,6 +223,7 @@ function HomePage() {
           <button onClick={() => setShowGroupDetail(false)} className="hover:cursor-pointer hover:fill-celadon-blue transition-all duration-200">
             <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px"><path d="M0 0h24v24H0z" fill="none" /><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" /></svg>
           </button>
+          <p className="text-lg font-bold">Group Info</p>
           <div className="space-x-8">
             <button className="hover:cursor-pointer">
               <svg
@@ -271,7 +263,7 @@ function HomePage() {
                     participant.id !== userId && (
                       <div className="flex justify-between items-center space-x-4 text-sm text-gray-600">
                         <div className="flex items-center space-x-4">
-                          <svg xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 20 20" height="48px" viewBox="0 0 20 20" width="48px" fill="#B7B7B7"><g><rect fill="none" height="20" width="20" /></g><g><g><path d="M10 2c-4.42 0-8 3.58-8 8s3.58 8 8 8 8-3.58 8-8-3.58-8-8-8zm0 3.5c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 11c-2.05 0-3.87-.95-5.07-2.44 1.45-.98 3.19-1.56 5.07-1.56s3.62.58 5.07 1.56c-1.2 1.49-3.02 2.44-5.07 2.44z" /></g></g></svg>
+                          <svg xmlns="http://www.w3.org/2000/svg" enableBackground="new 0 0 20 20" height="48px" viewBox="0 0 20 20" width="48px" fill="#B7B7B7"><g><rect fill="none" height="20" width="20" /></g><g><g><path d="M10 2c-4.42 0-8 3.58-8 8s3.58 8 8 8 8-3.58 8-8-3.58-8-8-8zm0 3.5c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 11c-2.05 0-3.87-.95-5.07-2.44 1.45-.98 3.19-1.56 5.07-1.56s3.62.58 5.07 1.56c-1.2 1.49-3.02 2.44-5.07 2.44z" /></g></g></svg>
                           <p className="font-bold line-clamp-1">{participant.name}</p>
                         </div>
                         {

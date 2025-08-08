@@ -26,6 +26,7 @@ function GroupDetailPage() {
         <NavLink to={`/group/${response?.results[0].room.id}`} className="fill-black hover:fill-celadon-blue hover:cursor-pointer transition-all duration-200">
           <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"><path d="m313-440 224 224-57 56-320-320 320-320 57 56-224 224h487v80H313Z" /></svg>
         </NavLink>
+        <p className="text-lg font-bold">Group Info</p>
         <div className="space-x-8">
           <button className="hover:cursor-pointer">
             <svg

@@ -12,6 +12,7 @@ export interface Comment {
   type: string;
   message: string;
   sender: string;
+  file: UploadedFile[];
 }
 
 export interface Room {
