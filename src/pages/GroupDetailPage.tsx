@@ -6,7 +6,6 @@ import data from "../data/dummy_response.json";
 function GroupDetailPage() {
   const [response, setResponse] = useState<Datas>();
   const [userId, setUserId] = useState("");
-  const roomId = window.location.pathname.split('/').pop();
 
   useEffect(() => {
     const handleFetchData = () => {
